@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>这是一个Demo</title>
+
+    <style>
+        #main {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #file-upload,
+        #content-display,
+        #json-display {
+            width: 30%;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        #file-upload {
+            margin-right: 5%;
+        }
+
+        #json-display {
+            margin-left: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align:center;">这是一个Demo</h1>
+    <div id="main">
+        <div id="file-upload">
+            <h2>上传文件</h2>
+            <input type="file" id="fileInput">
+            <button onclick="uploadFile()">上传</button>
+        </div>
+
+        <div id="content-display">
+            <h2>上传文件内容</h2>
+            <!-- 这里是用来显示内容的地方 -->
+        </div>
+        <div id="request-status">
+            <!-- 这里是用来显示请求状态的地方 -->
+        </div>
+        <div id="json-display">
+            <h2>返回JSON内容 </h2>
+            <!-- 这里是用来显示 JSON 数据的地方 -->
+        </div>
+    </div>
+    <script>
+        function uploadFile() {
+            // 获取文件
+            var file = document.getElementById('fileInput').files[0];
+
+            // 创建 FileReader 对象
+            var reader = new FileReader();
+
+            // 注册 onload 事件处理器，读取完成后显示文件内容
+            reader.onload = function (event) {
+                document.getElementById('content-display').innerText = event.target.result;
+            };
+
+            // 使用 readAsText 读取文件内容
+            reader.readAsText(file);
+
+            // 创建 FormData 对象
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // 创建 XMLHttpRequest 对象
+            var xhr = new XMLHttpRequest();
+
+            // 设置请求方法和服务器文件地址
+            xhr.open("POST", "/upload", true);
+
+            // 在发送请求之前，更新请求状态
+            document.getElementById('request-status').innerText = "后端正在给GPT发送请求...";
+
+            // 设置回调函数
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // 更新 JSON 数据显示区域
+                    document.getElementById('json-display').innerText = xhr.responseText;
+                    // 请求完成后，更新请求状态
+                    document.getElementById('request-status').innerText = "请求完成";
+                } else {
+                    alert('上传失败');
+                    // 如果失败，也更新请求状态
+                    document.getElementById('request-status').innerText = "请求失败";
+                }
+            };
+
+            // 发送请求
+            xhr.send(formData);
+        }
+    </script>
+</body>
