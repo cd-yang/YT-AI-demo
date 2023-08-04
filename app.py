@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 import json
+import gpt
+import prompts.dodaf as dodaf
+
 app = Flask(__name__)
 
 
@@ -27,9 +30,9 @@ def upload_file():
     content = content.replace("\r", "")
     content = content.replace("-", "")
     content = content.replace("=", "")
-    import gpt
     print("="*10+"正在询问gpt"+"="*10)
-    json_data = gpt.GetJson(content)
+    # json_data = gpt.GetJson(content)
+    json_data = gpt.get_completion(dodaf.getSvClasses(content))
     print("="*10+"询问完毕"+"="*10)
     print(json_data)
     return json_data
