@@ -12,7 +12,7 @@ openai.api_version = os.environ['API_VERSION']
 deployment_name = os.environ['DEPLOYMENT_NAME']
 
 
-def get_completion(prompt, temperature=0.9, model="gpt-35"):
+def get_completion(prompt, temperature=0.0, model="gpt-35"):
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
         model=model,
