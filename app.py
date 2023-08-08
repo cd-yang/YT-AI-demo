@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import json
-import gpt
+#import gpt
 import prompts.dodaf as dodaf
 import prompts.sv1
 

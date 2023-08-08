@@ -1,8 +1,7 @@
 import os
+from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
-from langchain.llms import AzureOpenAI
-# from langchain.chat_models import ChatOpenAI
-from langchain.chat_models.azure_openai import AzureChatOpenAI
+from langchain.chat_models import AzureChatOpenAI
 from langchain.output_parsers import PydanticOutputParser, CommaSeparatedListOutputParser
 from pydantic import BaseModel, Field, validator
 from typing import List
@@ -12,7 +11,7 @@ _ = load_dotenv(find_dotenv())  # read local .env file
 # model_name = 'text-davinci-003'
 model_name = 'gpt-35'
 temperature = 0.0
-model = AzureOpenAI(model_name=model_name, temperature=temperature,
+model = AzureChatOpenAI(model_name=model_name, temperature=temperature,
                     openai_api_key=os.environ['OPENAI_API_KEY'],
                     openai_api_base=os.environ['API_BASE'],
                     openai_api_type=os.environ['API_TYPE'],
@@ -49,11 +48,12 @@ def getSvClasses(description):
 
     _input = prompt.format(subject=description)
     print('*****_input: ' + _input)
-
-    output = model(_input)
+    message = [HumanMessage(content=_input)]
+    output = model(message)
     print('*****output: ')
     print(output)
 
-    parsed_output = output_parser.parse(output)
+    parsed_output = output_parser.parse(output.content)
 
     print(parsed_output)
+    return parsed_output
