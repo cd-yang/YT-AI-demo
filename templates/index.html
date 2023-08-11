@@ -50,7 +50,7 @@
         </div>
     </div>
     <script>
-        function uploadFile() {
+        async function uploadFile() {
             // 获取文件
             var file = document.getElementById('fileInput').files[0];
 
@@ -69,31 +69,25 @@
             var formData = new FormData();
             formData.append('file', file);
 
-            // 创建 XMLHttpRequest 对象
-            var xhr = new XMLHttpRequest();
-
-            // 设置请求方法和服务器文件地址
-            xhr.open("POST", "/upload", true);
-
             // 在发送请求之前，更新请求状态
             document.getElementById('request-status').innerText = "后端正在给GPT发送请求...";
-
-            // 设置回调函数
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    // 更新 JSON 数据显示区域
-                    document.getElementById('json-display').innerText = xhr.responseText;
-                    // 请求完成后，更新请求状态
-                    document.getElementById('request-status').innerText = "请求完成";
-                } else {
-                    alert('上传失败');
-                    // 如果失败，也更新请求状态
-                    document.getElementById('request-status').innerText = "请求失败";
-                }
-            };
-
-            // 发送请求
-            xhr.send(formData);
+            const res = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            console.log('xhr res1: ', res);
+            if (res.status === 200) {
+                const content = await res.json();
+                console.log('content: ', content);
+                // 更新 JSON 数据显示区域
+                document.getElementById('json-display').innerText = JSON.stringify(content);
+                // 请求完成后，更新请求状态
+                document.getElementById('request-status').innerText = "请求完成";
+            } else {
+                alert('上传失败');
+                // 如果失败，也更新请求状态
+                document.getElementById('request-status').innerText = "请求失败";
+            }
         }
     </script>
 </body>
