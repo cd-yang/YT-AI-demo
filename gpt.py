@@ -1,8 +1,8 @@
-import os
-import requests
-import json
-import openai
 from dotenv import load_dotenv, find_dotenv
+from langchain.chat_models import AzureChatOpenAI
+import os
+import openai
+
 _ = load_dotenv(find_dotenv())  # read local .env file
 
 openai.api_key = os.environ['OPENAI_API_KEY']
@@ -11,8 +11,10 @@ openai.api_type = os.environ['API_TYPE']
 openai.api_version = os.environ['API_VERSION']
 deployment_name = os.environ['DEPLOYMENT_NAME']
 
+temperature = 0.0
 
-def get_completion(prompt, temperature=0.0, model="gpt-35"):
+
+def get_completion(prompt, temperature=temperature, model="gpt-35"):
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
         model=model,
@@ -23,7 +25,7 @@ def get_completion(prompt, temperature=0.0, model="gpt-35"):
     return response.choices[0].message["content"]
 
 
-def GetJson(description):
+def get_json(description):
     prompt = f'''
     Your task is to help a system engineer create a 
     system model based 
@@ -43,3 +45,13 @@ def GetJson(description):
     '''
     # print(prompt)
     return get_completion(prompt)
+
+
+# model_name = 'text-davinci-003'
+model_name = 'gpt-35'
+langchain_chat_openai_model = AzureChatOpenAI(model_name=model_name, temperature=temperature,
+                                              openai_api_key=os.environ['OPENAI_API_KEY'],
+                                              openai_api_base=os.environ['API_BASE'],
+                                              openai_api_type=os.environ['API_TYPE'],
+                                              openai_api_version=os.environ['API_VERSION'],
+                                              deployment_name=os.environ['DEPLOYMENT_NAME'])
