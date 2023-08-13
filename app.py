@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from prompts import av1, sv1
+from prompts import av1, sv1, sv10b, sv10c
 
 app = Flask(__name__)
 
@@ -31,7 +31,7 @@ def upload_file():
     result = {}
 
     print("="*10+" 步骤 1：正在生成 AV-1 ")
-    av1_fields = av1.get_av1_fields(content, True)
+    av1_fields = av1.get_av1_fields(content)
     print("="*10+" 步骤 1 成功 ")
     print(av1_fields)
     result['av1Fields'] = av1_fields
@@ -40,8 +40,19 @@ def upload_file():
     sv_classes = sv1.get_sv_classes(content)
     print("="*10+" 步骤 2 成功 ")
     print(sv_classes)
-
     result['svClasses'] = sv_classes
+
+    print("="*10+" 步骤 3：正在生成 SV-10b 状态图 ")
+    state_diagrams = sv10b.get_sv_state_diagrams(content)
+    print("="*10+" 步骤 3 成功 ")
+    print(state_diagrams)
+    result['stateDiagrams'] = state_diagrams
+
+    print("="*10+" 步骤 4：正在生成 SV-10c 时序图 ")
+    sequence_diagrams = sv10c.get_sv_sequence_diagrams(content)
+    print("="*10+" 步骤 4 成功 ")
+    print(sequence_diagrams)
+    result['sequenceDiagrams'] = sequence_diagrams
 
     return result
 

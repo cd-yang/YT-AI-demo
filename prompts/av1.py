@@ -21,7 +21,7 @@ template = '''
 # \n{format_instructions}
 
 
-def get_av1_fields(description, debug):
+def get_av1_fields(description, debug=False):
     # output_parser = StructuredOutputParser()
     # format_instructions = output_parser.get_format_instructions()
     prompt = PromptTemplate(
