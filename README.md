@@ -9,3 +9,7 @@ Python version >= 3.8
 
 ## Run
 `python app.py`
+
+
+# Dev
+update deps: `pipreqs . --encoding=utf8 --force`

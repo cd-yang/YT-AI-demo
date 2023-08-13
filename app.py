@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import prompts.sv1
+from prompts import av1, sv1
 
 app = Flask(__name__)
 
@@ -23,18 +23,27 @@ def upload_file():
 
     # 读取文件内容
     content = file.read().decode('utf-8')
-
     content = content.replace("\n", "")
     content = content.replace("\r", "")
     content = content.replace("-", "")
     content = content.replace("=", "")
 
-    print("="*10+"正在询问gpt"+"="*10)
-    json_data = prompts.sv1.get_sv_classes(content)
+    result = {}
 
-    print("="*10+"询问完毕"+"="*10)
-    print(json_data)
-    return json_data
+    print("="*10+" 步骤 1：正在生成 AV-1 ")
+    av1_fields = av1.get_av1_fields(content, True)
+    print("="*10+" 步骤 1 成功 ")
+    print(av1_fields)
+    result['av1Fields'] = av1_fields
+
+    print("="*10+" 步骤 2：正在生成 SV-1 ")
+    sv_classes = sv1.get_sv_classes(content)
+    print("="*10+" 步骤 2 成功 ")
+    print(sv_classes)
+
+    result['svClasses'] = sv_classes
+
+    return result
 
 
 if __name__ == '__main__':
