@@ -9,6 +9,7 @@ from langchain.output_parsers import StructuredOutputParser
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field, validator
 from typing import List
+import json
 
 # 待测试： AV-1 中的各个字段，在一个请求中获取，还是单独获取，准确性高
 
@@ -17,6 +18,8 @@ template = '''
         Write all the information (operationalArea, operationalEnvironment, threatTarget, operationalBackground) based on the information provided in the technical specifications delimited by triple backticks.
 
         Technical specifications:  ```{subject}```
+
+        response in Chinese, format in JSON
         '''
 # \n{format_instructions}
 
@@ -45,7 +48,8 @@ def get_av1_fields(description, debug=False):
     # if debug:
     #     print(parsed_output)
     # return parsed_output
-    return output.content
+    return json.loads(output.content)
+    # return output.content
 
 # # Define your desired data structure.
 # class Joke(BaseModel):
