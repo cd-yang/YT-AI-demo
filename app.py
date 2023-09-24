@@ -43,7 +43,7 @@ def upload_file():
     result['svClasses'] = sv_classes
 
     print("="*10+" 步骤 3：正在生成 SV-10b 状态图 ")
-    state_diagrams = sv10b.get_sv_state_diagrams(content)
+    state_diagrams = sv10b.get_sv_state_diagrams(content, sv_classes)
     print("="*10+" 步骤 3 成功 ")
     print(state_diagrams)
     result['stateDiagrams'] = state_diagrams
